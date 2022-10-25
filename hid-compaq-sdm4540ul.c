@@ -57,50 +57,58 @@ static int compaq_sdm4540ul_raw_event(struct hid_device* hdev, struct hid_report
 
     else if ((data[0] == 4) && (data[3] == 32)) {
         // Bullseye, currently not implemented
-        dev_printk(KERN_INFO, &hdev->dev, "Bullseye/target key isn't supported by the driver yet.");
-    }
-
-    else if ((data[0] == 4) && (data[3] == 1)) {
-        // Mail (envelope)
         input_report_key(input, KEY_F14, key_on);
         input_report_key(input, KEY_F14, key_off);
     }
 
-    else if ((data[0] == 4) && (data[3] == 8)) {
-        // Info 'i'
+    else if ((data[0] == 4) && (data[3] == 1)) {
+        // Mail (envelope)
         input_report_key(input, KEY_F15, key_on);
         input_report_key(input, KEY_F15, key_off);
     }
 
-    else if ((data[0] == 4) && (data[3] == 4)) {
-        // Q logo
+    else if ((data[0] == 4) && (data[3] == 8)) {
+        // Info 'i'
         input_report_key(input, KEY_F16, key_on);
         input_report_key(input, KEY_F16, key_off);
     }
 
-    else if ((data[0] == 4) && (data[3] == 64)) {
-        // e-marketplace
+    else if ((data[0] == 4) && (data[3] == 4)) {
+        // Q logo
         input_report_key(input, KEY_F17, key_on);
         input_report_key(input, KEY_F17, key_off);
     }
 
-    else if ((data[0] == 4) && (data[3] == 2)) {
-        // Movies/Music
+    else if ((data[0] == 4) && (data[3] == 64)) {
+        // e-marketplace
         input_report_key(input, KEY_F18, key_on);
         input_report_key(input, KEY_F18, key_off);
-
     }
 
-    else if ((data[0] == 3) && (data[4] == 1)) {
-        // Help ('?')
+    else if ((data[0] == 4) && (data[3] == 2)) {
+        // Movies/Music
         input_report_key(input, KEY_F19, key_on);
         input_report_key(input, KEY_F19, key_off);
     }
 
-    else if ((data[0] == 3) && (data[4] == 2)) {
-        // Person/Contact
+    else if ((data[0] == 3) && (data[4] == 1)) {
+        // Help ('?')
         input_report_key(input, KEY_F20, key_on);
         input_report_key(input, KEY_F20, key_off);
+    }
+
+    else if ((data[0] == 3) && (data[4] == 2)) {
+        // Person/Contact
+        input_report_key(input, KEY_F21, key_on);
+        input_report_key(input, KEY_F21, key_off);
+    }
+
+    else {
+        // In this case, the key being pressed is NOT one of the 9 special keys (the 7 from the blue bar and then the 2 on the right of that)
+        // but instead, it's a key that would normally be already supported by the default kernel driver.
+        // Hence, in this case, we're basically deferring to the default kernel interpretation -- so that normal key functionality still works
+        input_report_key(input, data[2], key_on);
+        input_report_key(input, data[2], key_off);
     }
 
     return 0;
